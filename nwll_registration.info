@@ -1,0 +1,6 @@
+name = NWLL Registration
+description = Handles custom registration processing for NWLL.
+core = 7.x
+package = NWLL
+
+version = "7.x-1.0"
