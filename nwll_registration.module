@@ -1,0 +1,138 @@
+<?php
+
+/**
+ * Confirmation Page Webform ID #1057.
+ */
+function nwll_registration_payment_details_all($format = NULL) {
+
+global $user;
+$payment = '';
+$payment_date = '';
+$payer_email = '';
+$first_name = '';
+$last_name = '';
+$payment_status = '';
+$invoice = '';
+$output = '';
+$output2 = '';
+
+$nwll_paypal_env = variable_get('nwll_paypal_env');
+
+if ($nwll_paypal_env == 'sandbox') {
+  $query = db_select('paypal_ipn_sandbox', 'p');
+  drupal_set_message($nwll_paypal_env);
+} else {
+  $query = db_select('paypal_ipn', 'p');
+}
+$query->fields('p');
+$query->condition('transaction_subject', $user->uid,'=');
+$query->orderBy('p.payment_date', 'DESC');
+$result = $query->execute();
+//print '<p>'.var_dump($result->rowCount()).'</p>';
+if ($result->rowCount() > 0) {
+  $output2 = $output2.'<b>Payment:</b> '.$payment.'<br/>';
+  $output = $output.'<table class="views-table cols-7">';
+  $output = $output.'<thead><tr><th>Season</th><th>Pay Date</th><th>Payment</th><th>Payment Status</th><th>Players</th><th>Volunteer</th><td>Candy</th></tr></thead><tbody>';
+  $row = 'odd';
+  while($record = $result->fetchAssoc()) {
+    //print_r($record);
+    $payment = money_format('$%i', $record["payment_gross"]);
+    $payment_date = date('M d, Y h:i a', strtotime($record["payment_date"]));
+    $payer_email = $record["payer_email"];
+    $first_name = $record["first_name"];
+    $last_name = $record["last_name"];
+    $payment_status = $record["payment_status"];
+    $invoice = $record["invoice"];
+    //INVOICE (i.e. 2013SB-C1-VD-CB)
+    $year = substr($invoice, 0, 4);
+    switch (substr($invoice, 4, 2)) {
+      case 'SB';
+        $season = 'Spring';
+        break;
+      case 'FB';
+        $season = 'Fall';
+        break;
+    }
+    switch (substr($invoice, 7, 2)) {
+      case 'C1';
+        $children = '1 Child';
+        break;
+      case 'C2';
+        $children = '2 Children';
+        break;
+      case 'C3';
+        $children = '3 Children';
+        break;
+      case 'C4';
+        $children = '4 Children';
+        break;
+      case 'C5';
+        $children = '5 Children';
+        break;
+    }
+    switch (substr($invoice, 10, 2)) {
+      case 'VD';
+        $volunteer = 'Refundable Deposit';
+        break;
+      case 'VB';
+        $volunteer = 'Buyout';
+        break;
+    }
+    switch (substr($invoice, 13, 2)) {
+      case 'CB';
+        $candy = 'Buyout';
+        break;
+      case 'CS';
+        $candy = 'Sell';
+        break;
+    }
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    //$output = $output.'';
+    $output = $output.'<tr class="'.$row.'"><td class="views-field">'.$season.' '.$year.'</td><td class="views-field">'.$payment_date.'</td><td class="views-field">'.$payment.'</td><td class="views-field">'.$payment_status.'</td><td class="views-field">'.$children.'</td><td class="views-field">'.$volunteer.'</td><td class="views-field">'.$candy.'</td></tr>';
+    if ($row == 'odd') {
+      $row = 'even';
+    } else {
+      $row = 'odd';
+    }
+    
+    $output2 = $output2.'<b>Pay Date:</b> '.$payment_date.'<br/>';
+    //$output2 = $output2.'<b>Payer Name:</b> '.$first_name.' '.$last_name.'<br/>';
+    //$output2 = $output2.'<b>Payer Email:</b> '.$payer_email.'<br/>';
+    $output2 = $output2.'<b>Payment Status:</b> '.$payment_status.'<br/>';
+    //$output2 = $output2.'<p></p>';
+    $output2 = $output2.'<b>Registration Summary:</b><br/>';
+    $output2 = $output2.'&nbsp;&nbsp;'.$children.'<br/>';
+    $output2 = $output2.'&nbsp;&nbsp;'.$volunteer.'<br/>';
+    $output2 = $output2.'&nbsp;&nbsp;'.$candy.'<br/>';
+  }
+  $output = $output.'</tbody></table>';
+  $output = $output.'<p>* Note1: Payment details are only available from the Spring 2013 Season forward.</p>';
+  $output = $output.'<p>* Note2: Please <a href="/user">refresh page</a> if most recent payment does not display.</p>';
+
+} else {
+  //No payment detected in paypal_ipn table
+}
+  //return $output to calling function
+  if ($format == 1) {
+    return $output2;
+  } else {
+    return $output;
+  }
+}
+
+/**
+ * Confirmation Page Webform ID #1057.
+ */
+function nwll_registration_explode_invoice($invoice=NULL) {
+  if (!is_null($invoice)) {
+
+  }
+}
+?>
