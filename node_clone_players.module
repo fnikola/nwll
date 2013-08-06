@@ -1,3 +1,4 @@
+<?php
 /**
  * Alter the node before saving a clone.
  *
