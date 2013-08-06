@@ -1,0 +1,22 @@
+/**
+ * Alter the node before saving a clone.
+ *
+ * @param $node
+ *   Reference to the fully loaded node object being saved (the clone) that
+ *   can be altered as needed.
+ * @param array $context
+ *   An array of context describing the clone operation. The keys are:
+ *   - 'method' : Can be either 'prepopulate' or 'save-edit'.
+ *   - 'original_node' : The original fully loaded node object being cloned.
+ *
+ * @see clone_node_save()
+ * @see drupal_alter()
+ */
+function clone_node_players_clone_node_alter(&$node, $context) {
+  if ($context['original_node']->type = 'players') {
+    $node->title = $context['original_node']->title;
+    $node->field_season['und'][0]['value'] = variable_get('nwll_season');
+    $node->year['und'][0]['value'] = variable_get('nwll_year');
+  }
+}
+
