@@ -1,0 +1,6 @@
+name = PayPal IPN
+description = Handles PayPal IPN transaction callback processing.
+core = 7.x
+package = PayPal
+
+version = "7.x-1.0"
