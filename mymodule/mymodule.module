@@ -1,6 +1,23 @@
-name = mymodule
-description = Updates specific node fields for the players node clone (i.e. name, season).
-core = 7.x
-package = NWLL
+<?php
+function mymodule_clone_node_alter(&$node, $context) {
+  // Do stuff
+  watchdog('registration', "Project Error: <pre>".print_r($node->year['und'][0]['value'], true)."</pre>");
+  drupal_set_message('<pre>'. check_plain($node->field_last_name['und'][0]['value']) .'</pre>');
+  drupal_set_message('<pre>'. check_plain(print_r($node, TRUE)) .'</pre>');
+  $node->field_last_name['und'][0]['value'] = 'FRANK';
+  switch ($context['method']) {
+    case 'prepopulate':
+      if ($node->type == 'players') {
+        //drupal_set_message('<pre>'. check_plain(print_r($node, TRUE)) .'</pre>');
+        if ($context['original_node']->type = 'players') {
+          $node->title = $context['original_node']->title;
+          $node->field_season['und'][0]['value'] = variable_get('nwll_season');
+          $node->year['und'][0]['value'] = variable_get('nwll_year');
+        }
+      }
+      break;
 
-version = "7.x-1.0"
+    case 'save-edit':
+      break;
+  }
+}
