@@ -1,6 +1,0 @@
-name = Node Clone Players
-description = Updates specific node fields for the players node clone (i.e. name, season).
-core = 7.x
-package = NWLL
-
-version = "7.x-1.0"
