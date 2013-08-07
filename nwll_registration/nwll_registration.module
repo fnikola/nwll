@@ -135,4 +135,24 @@ function nwll_registration_explode_invoice($invoice=NULL) {
 
   }
 }
+
+/**
+ * Implement clone_node_alter HOOK.
+ */
+function nwll_registration_clone_node_alter(&$node, $context) {
+  switch ($context['method']) {
+    case 'prepopulate':
+      drupal_set_message('<pre>'. check_plain(print_r($node, TRUE)) .'</pre>');
+      if ($node->type = 'players') {
+        $node->title = $context['original_node']->title;
+        $node->field_season['und'][0]['value'] = variable_get('nwll_season');
+        $node->year['und'][0]['value'] = variable_get('nwll_year');
+      }
+      drupal_set_message('<pre>'. check_plain(print_r($node, TRUE)) .'</pre>');
+      break;
+
+    case 'save-edit':
+      break;
+  }
+}
 ?>
