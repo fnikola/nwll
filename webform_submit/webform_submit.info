@@ -1,0 +1,7 @@
+name = Webform Submit
+description = Handles additional submit processing for the Webform module.
+core = 7.x
+package = Webform
+dependencies[] = webform
+
+version = "7.x-1.0"
