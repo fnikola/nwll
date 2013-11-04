@@ -97,7 +97,7 @@ function paypal_ipn_payment_paypal_ipn_callback () {
         $address_status = $_POST['address_status'];
         $address_street = $_POST['address_street'];
         $address_zip = $_POST['address_zip'];
-        
+
         //Information about the payment:
         $handling_amount = $_POST['handling_amount'];
         $item_name = $_POST['item_name'];
@@ -324,33 +324,35 @@ BODY;
 
           //drupal_mail('paypal', 'admin_confirmation', $receiver_email, user_preferred_language($user), array());
 
-          //watchdog('paypal', 'Mails sent @txn_id.', array('@txn_id' => $txn_id), WATCHDOG_NOTICE);
+          watchdog('paypal', 'Mails sent @txn_id.', array('@txn_id' => $txn_id), WATCHDOG_NOTICE);
         }
 
+        watchdog('paypal', 'Pre payment @custom.', array('@custom' => $custom), WATCHDOG_NOTICE);
         //Insert payment
         //global $user;
-        $node = new stdClass(); // Create a new node object
-        $node->type = "payment"; // Or page, or whatever content type you like
-        node_object_prepare($node); // Set some default values
+        $nodePay = new stdClass(); // Create a new node object
+        $nodePay->type = "payment"; // Or page, or whatever content type you like
+        node_object_prepare($nodePay); // Set some default values
         $profile = user_load($custom);
-        $node->title = $profile->field_last_name['und'][0]['value'].'-'.$profile->field_first_name['und'][0]['value'].'-'.$custom;
-        $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
-        $node->uid = $custom; // UID of the author of the node; or use $node->name
-        $node->field_payment_user_ref[$node->language][]['uid'] = $custom;
-        $node->field_year[$node->language][0]['value'] = $nwll_year.'-01-01 00:00:00'; //2013-00-00 00:00:00
-        $node->field_season[$node->language][0]['value'] = $nwll_invoice_season;
+        $nodePay->title = $profile->field_last_name['und'][0]['value'].'-'.$profile->field_first_name['und'][0]['value'].'-'.$custom;
+        $nodePay->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
+        $nodePay->uid = $custom; // UID of the author of the node; or use $nodePay->name
+        $nodePay->field_payment_user_ref[$nodePay->language][]['uid'] = $custom;
+        $nodePay->field_year[$nodePay->language][0]['value'] = $nwll_year.'-01-01 00:00:00'; //2013-00-00 00:00:00
+        $nodePay->field_season[$nodePay->language][0]['value'] = $nwll_invoice_season;
         date_default_timezone_set('America/New_York');
-        $node->field_payment_date[$node->language][0]['value'] = date('Y-m-d H:i:s', REQUEST_TIME); //REQUEST_TIME
-        //drupal_set_message(date_default_timezone_get());
-        $node->field_payment_type[$node->language][0]['value'] = "PayPal";
-        $node->field_payment_amount[$node->language][0]['value'] = $mc_gross;
-        $node->field_status[$node->language][0]['value'] = $payment_status;
-        $node->field_payment_invoice[$node->language][0]['value'] = $invoice;
-        $node->field_paypal_txn_id[$node->language][0]['value'] = $txn_id;
-        if($node = node_submit($node)) { // Prepare node for saving
-          node_save($node);
+        $nodePay->field_payment_date[$nodePay->language][0]['value'] = date('Y-m-d H:i:s', REQUEST_TIME); //REQUEST_TIME
+        $nodePay->field_payment_type[$nodePay->language][0]['value'] = "PayPal";
+        $nodePay->field_payment_amount[$nodePay->language][0]['value'] = $mc_gross;
+        $nodePay->field_status[$nodePay->language][0]['value'] = $payment_status;
+        $nodePay->field_payment_invoice[$nodePay->language][0]['value'] = $invoice;
+        $nodePay->field_paypal_txn_id[$nodePay->language][0]['value'] = $txn_id;
+        watchdog('paypal', 'Pre 2 payment @title.', array('@title' => $nodePay->title), WATCHDOG_NOTICE);
+        if($nodePay = node_submit($nodePay)) { // Prepare node for saving
+          watchdog('paypal', 'Pre 3 payment @custom.', array('@custom' => $custom), WATCHDOG_NOTICE);
+          node_save($nodePay);
         }
-
+        watchdog('paypal', 'Post payment @custom.', array('@custom' => $custom), WATCHDOG_NOTICE);
       }
       else if (strcmp ($res, "INVALID") == 0) {
         watchdog('paypal', 'INVALID');
