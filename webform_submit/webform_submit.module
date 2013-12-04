@@ -364,14 +364,21 @@ function webform_submit_confirmation($submission) {
     // TO DO Get the product IDs for each player registered (need to look up sport/age)
     $product_id = 5;
     
-    // TO DO: Check to see if cart already exists; if so, remove it and recreate new one.
-    
-    // Create the new order in checkout
-    $order = commerce_order_new($user->uid, 'checkout_checkout');
-    
-    // Save the order to get its ID.
-    commerce_order_save($order);
-    
+    // First, see if there is already a cart for this user. Here we will not assume that commerce_cart is enabled.
+    if (module_exists('commerce_cart')) {
+      $order = commerce_cart_order_load($user->uid);
+    }
+  
+    if (empty($order)) {
+      // Create the new order in checkout status.
+      $order = commerce_order_new($user->uid, 'checkout_checkout');
+      // Save the order so its ID is assigned.
+      commerce_order_save($order);
+    } else {
+      // Remove all existing items from the cart so current items can be added now below!
+      commerce_cart_order_empty($order);
+    }
+
     // Load whatever product represents the item the customer will be paying for and create a line item for it.
     $product = commerce_product_load($product_id);
     $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
