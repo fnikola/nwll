@@ -375,16 +375,26 @@ function webform_submit_confirmation($submission) {
     // Load whatever product represents the item the customer will be paying for and create a line item for it.
     $product = commerce_product_load($product_id);
     $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+    // Save the line item to get its ID.
+    commerce_line_item_save($line_item);
+    // Add the line item to the order using fago's rockin' wrapper.
+    $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+    $order_wrapper->commerce_line_items[] = $line_item;
+
     // Load volunteer
     $product = commerce_product_load($volunteer == '$75 - Refundable Deposit' ? 8 : 7);
     $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+    // Save the line item to get its ID.
+    commerce_line_item_save($line_item);
+    // Add the line item to the order using fago's rockin' wrapper.
+    $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+    $order_wrapper->commerce_line_items[] = $line_item;
+
     // Load candy
     $product = commerce_product_load($candy == '$35 - Candy Buyout' ? 9 : 10);
     $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
-    
     // Save the line item to get its ID.
     commerce_line_item_save($line_item);
-    
     // Add the line item to the order using fago's rockin' wrapper.
     $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
     $order_wrapper->commerce_line_items[] = $line_item;
