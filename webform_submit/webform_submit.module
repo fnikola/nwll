@@ -75,7 +75,7 @@ function webform_submit_submit_6577($form, &$form_state) {
  * Confirmation Page Webform ID #1057.
  */
 function webform_submit_confirmation($submission) {
-  if ($submission->data[nid] == 1057) {
+  if ($submission->nid == 1057) {
     /*
     $children = $submission->data[1]['value'][0];
     $volunteer = $submission->data[2]['value'][0];
@@ -346,7 +346,7 @@ function webform_submit_confirmation($submission) {
       $output = $output.'</form>';
     }
     return $output;
-  }elseif ($submission->data[nid] == 6577') {
+  }elseif ($submission->nid == 6577') {
     $output = '[integrate with commerce cart here]';
     return $output;
   }
