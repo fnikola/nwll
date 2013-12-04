@@ -13,6 +13,15 @@ function webform_submit_form_alter(&$form, $form_state, $form_id) {
     // ours second.
     $first = array_shift($form['#submit']);
     array_unshift($form['#submit'], $first, 'webform_submit_submit_1057');
+  } elseif ($form_id == 'webform_client_form_6577') {
+    // Simply add the additional validate handler.
+    $form['#validate'][] = 'webform_submit_validate_6577';
+
+    // Add the submit handler after the existing Webform submit handler,
+    // but before the second Webform handler. Pop off the first one and add
+    // ours second.
+    $first = array_shift($form['#submit']);
+    array_unshift($form['#submit'], $first, 'webform_submit_submit_6577');
   }
 }
 
@@ -40,277 +49,305 @@ function webform_submit_submit_1057($form, &$form_state) {
 }
 
 /**
+ * Validation handler for Webform ID #6577.
+ */
+function webform_submit_validate_6577($form, &$form_state) {
+  global $user;
+  if (!isset($user->roles[4])) {
+    //form_set_error('', t('Your user role is not allowed to submit this Webform.'));
+  }
+}
+
+/**
+ * Submit handler for Webform ID #1057.
+ */
+function webform_submit_submit_6577($form, &$form_state) {
+  global $user;
+
+  // Changes can be made to the Webform node settings by modifying this variable:
+  //$form['#node']->webform;
+
+  // Insert things into other database tables or modify properties.
+
+}
+
+/**
  * Confirmation Page Webform ID #1057.
  */
 function webform_submit_confirmation($submission) {
-/*
-$children = $submission->data[1]['value'][0];
-$volunteer = $submission->data[2]['value'][0];
-$candy = $submission->data[3]['value'][0];
-$payment = $submission->data[4]['value'][0];
-*/
-$children = $submission->data[1][0];
-$volunteer = $submission->data[2][0];
-$candy = $submission->data[3][0];
-$payment = $submission->data[4][0];
-
-$nwll_season = variable_get('nwll_season');
-$nwll_year = variable_get('nwll_year');
-$nwll_invoice_season = variable_get('nwll_invoice_season');
-$nwll_paypal_env = variable_get('nwll_paypal_env');
-
-if ($nwll_paypal_env == 'sandbox') {
-  $paypal_form_action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-  drupal_set_message($nwll_paypal_env);
-  $sandbox = true;
-} else {
-  $paypal_form_action = 'https://www.paypal.com/cgi-bin/webscr';
-  $sandbox = false;
-}
-//$PROD = false;
-
-if ($children == 1) {
-  $children_label = 'Child';
-  $children_fee = '$140.00 - ';
-  $cost_children = 140;
-  if (!$sandbox) { //PRODUCTION
-    $hosted_button_id = 'LL54D4NF87HFC';
-  } else { //TEST SANDBOX
-    $hosted_button_id = 'NNL3852YFA25U';
-  }
-  $hidden = '<input type="hidden" name="on0" value="1 Child Registration">';
-  if ($volunteer == '$75 - Refundable Deposit') {
-    $cost_volunteer = 75;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $250.00 USD</option>';
-      $inv_append = 'VD-CB';
-      $cost_candy = 35;
+  if ($form_id == 'webform_client_form_1057') {
+    /*
+    $children = $submission->data[1]['value'][0];
+    $volunteer = $submission->data[2]['value'][0];
+    $candy = $submission->data[3]['value'][0];
+    $payment = $submission->data[4]['value'][0];
+    */
+    $children = $submission->data[1][0];
+    $volunteer = $submission->data[2][0];
+    $candy = $submission->data[3][0];
+    $payment = $submission->data[4][0];
+    
+    $nwll_season = variable_get('nwll_season');
+    $nwll_year = variable_get('nwll_year');
+    $nwll_invoice_season = variable_get('nwll_invoice_season');
+    $nwll_paypal_env = variable_get('nwll_paypal_env');
+    
+    if ($nwll_paypal_env == 'sandbox') {
+      $paypal_form_action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+      drupal_set_message($nwll_paypal_env);
+      $sandbox = true;
     } else {
-      $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $265.00 USD</option>';
-      $inv_append = 'VD-CS';
-      $cost_candy = 50;
+      $paypal_form_action = 'https://www.paypal.com/cgi-bin/webscr';
+      $sandbox = false;
     }
-  } else { //$150 Volunteer Buyout
-    $cost_volunteer = 150;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $325.00 USD</option>';
-      $inv_append = 'VB-CB';
-      $cost_candy = 35;
+    //$PROD = false;
+    
+    if ($children == 1) {
+      $children_label = 'Child';
+      $children_fee = '$140.00 - ';
+      $cost_children = 140;
+      if (!$sandbox) { //PRODUCTION
+        $hosted_button_id = 'LL54D4NF87HFC';
+      } else { //TEST SANDBOX
+        $hosted_button_id = 'NNL3852YFA25U';
+      }
+      $hidden = '<input type="hidden" name="on0" value="1 Child Registration">';
+      if ($volunteer == '$75 - Refundable Deposit') {
+        $cost_volunteer = 75;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $250.00 USD</option>';
+          $inv_append = 'VD-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $265.00 USD</option>';
+          $inv_append = 'VD-CS';
+          $cost_candy = 50;
+        }
+      } else { //$150 Volunteer Buyout
+        $cost_volunteer = 150;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $325.00 USD</option>';
+          $inv_append = 'VB-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $340.00 USD</option>';
+          $inv_append = 'VB-CS';
+          $cost_candy = 50;
+        }
+      }
+    } elseif ($children == 2) {
+      $children_label = 'Children';
+      $children_fee = '$260.00 - ';
+      $cost_children = 260;
+      if (!$sandbox) { //PRODUCTION
+        $hosted_button_id = 'ZFD59U5QXXGGG';
+      } else { //TEST SANDBOX
+        $hosted_button_id = 'Z5Q93R7D4ZG54';
+      }
+      $hidden = '<input type="hidden" name="on0" value="2 Children Registration">';
+      if ($volunteer == '$75 - Refundable Deposit') {
+        $cost_volunteer = 75;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $370.00 USD</option>';
+          $inv_append = 'VD-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $385.00 USD</option>';
+          $inv_append = 'VD-CS';
+          $cost_candy = 50;
+        }
+      } else { //$150 Volunteer Buyout
+        $cost_volunteer = 150;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $445.00 USD</option>';
+          $inv_append = 'VB-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $460.00 USD</option>';
+          $inv_append = 'VB-CS';
+          $cost_candy = 50;
+        }
+      }
+    } elseif ($children == 3) {
+      $children_label = 'Children';
+      $children_fee = '$360.00 - ';
+      $cost_children = 360;
+      if (!$sandbox) { //PRODUCTION
+        $hosted_button_id = 'HCGC8LCK3GST8';
+      } else { //TEST SANDBOX
+        $hosted_button_id = 'X85CAMULYEQML';
+      }
+      $hidden = '<input type="hidden" name="on0" value="3 Children Registration">';
+      if ($volunteer == '$75 - Refundable Deposit') {
+        $cost_volunteer = 75;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $470.00 USD</option>';
+          $inv_append = 'VD-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $485.00 USD</option>';
+          $inv_append = 'VD-CS';
+          $cost_candy = 50;
+        }
+      } else { //$150 Volunteer Buyout
+        $cost_volunteer = 150;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $545.00 USD</option>';
+          $inv_append = 'VB-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $560.00 USD</option>';
+          $inv_append = 'VB-CS';
+          $cost_candy = 50;
+        }
+      }
+    } elseif ($children == 4) {
+      $children_label = 'Children';
+      $children_fee = '$440.00 - ';
+      $cost_children = 440;
+      if (!$sandbox) { //PRODUCTION
+        $hosted_button_id = 'NTYZDGDZZ2CZA';
+      } else { //TEST SANDBOX
+        $hosted_button_id = 'X6ZN7ZUVWBJV4';
+      }
+      $hidden = '<input type="hidden" name="on0" value="4 Children Registration">';
+      if ($volunteer == '$75 - Refundable Deposit') {
+        $cost_volunteer = 75;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $550.00 USD</option>';
+          $inv_append = 'VD-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $565.00 USD</option>';
+          $inv_append = 'VD-CS';
+          $cost_candy = 50;
+        }
+      } else { //$150 Volunteer Buyout
+        $cost_volunteer = 150;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $625.00 USD</option>';
+          $inv_append = 'VB-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $640.00 USD</option>';
+          $inv_append = 'VB-CS';
+          $cost_candy = 50;
+        }
+      }
+    } elseif ($children == 5) {
+      $children_label = 'Children';
+      $children_fee = '$500.00 - ';
+      $cost_children = 500;
+      if (!$sandbox) { //PRODUCTION
+        $hosted_button_id = 'QLHQPW6ZZML5W';
+      } else { //TEST SANDBOX
+        $hosted_button_id = 'AZHKPYGCKKL2Y';
+      }
+      $hidden = '<input type="hidden" name="on0" value="5 Children Registration">';
+      if ($volunteer == '$75 - Refundable Deposit') {
+        $cost_volunteer = 75;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $610.00 USD</option>';
+          $inv_append = 'VD-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $625.00 USD</option>';
+          $inv_append = 'VD-CS';
+          $cost_candy = 50;
+        }
+      } else { //$150 Volunteer Buyout
+        $cost_volunteer = 150;
+        if ($candy == '$35 - Candy Buyout') {
+          $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $685.00 USD</option>';
+          $inv_append = 'VB-CB';
+          $cost_candy = 35;
+        } else {
+          $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $700.00 USD</option>';
+          $inv_append = 'VB-CS';
+          $cost_candy = 50;
+        }
+      }
+    }
+    $volunteer_print = str_replace('$', '$', $volunteer);
+    $volunteer_print = str_replace(' - ', '.00 - ', $volunteer_print);
+    $candy_print = str_replace('$', '$ ', $candy);
+    $candy_print = str_replace(' - ', '.00 - ', $candy_print);
+    $registration_summary = '&nbsp;&nbsp;'.$children_fee.$children.' '.$children_label.'<br/>&nbsp;&nbsp;'.$volunteer_print.'<br/>&nbsp;&nbsp;'.$candy_print.'<br/>';
+    $cost_total = $cost_children + $cost_candy + $cost_volunteer;
+    //print $registration_summary;
+    
+    if($payment == 'C') {
+    
+      global $user;
+      $node = new stdClass(); // Create a new node object
+      $node->type = "payment"; // Or page, or whatever content type you like
+      node_object_prepare($node); // Set some default values
+      // If you update an existing node instead of creating a new one,
+      // comment out the three lines above and uncomment the following:
+      // $node = node_load($nid); // ...where $nid is the node id
+      //$node->title    = "";
+      $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
+      $node->uid = $user->uid; // UID of the author of the node; or use $node->name
+      $node->field_payment_user_ref[$node->language][]['uid'] = $user->uid;
+      $node->field_year[$node->language][0]['value'] = $nwll_year.'-01-01 00:00:00'; //2013-00-00 00:00:00
+      $node->field_season[$node->language][0]['value'] = $nwll_invoice_season;
+      date_default_timezone_set('America/New_York');
+      $node->field_payment_date[$node->language][0]['value'] = date('Y-m-d H:i:s', REQUEST_TIME); //REQUEST_TIME
+      //drupal_set_message(date_default_timezone_get());
+      $node->field_payment_type[$node->language][0]['value'] = "Check";
+      $node->field_payment_amount[$node->language][0]['value'] = $cost_total;
+      $node->field_status[$node->language][0]['value'] = 'Pending';
+      $node->field_payment_invoice[$node->language][0]['value'] = $nwll_invoice_season.'-C'.$children.'-'.$inv_append;
+      $node->field_paypal_txn_id[$node->language][0]['value'] = NULL;
+      if($node = node_submit($node)) { // Prepare node for saving
+        node_save($node);
+      }
+    
+      $output = '<p>Please review your registration choices below and if you need to make changes, please "go back" and make the appropriate changes and re-submit the form.</p>';
+      $output = $output.$registration_summary;
+      $output = $output.'<p>&nbsp;</p>';
+      $output = $output.'<div class="mail-check">';
+      $output = $output.'<p style="font-weight: bold;">&nbsp;&nbsp;Please mail your check payable to "NWLL" for the amount of $'.$cost_total.'.00 to:</p>';
+      $output = $output.'<p>&nbsp;&nbsp;&nbsp;&nbsp;North Wall Little League<br/>';
+      $output = $output.'&nbsp;&nbsp;&nbsp;&nbsp;P.O. Box 1242<br/>';
+      $output = $output.'&nbsp;&nbsp;&nbsp;&nbsp;Wall, NJ 07719-1242</p>';
+      $output = $output.'</div>';
+      $output = $output.'<p>&nbsp;</p>';
+    
     } else {
-      $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $340.00 USD</option>';
-      $inv_append = 'VB-CS';
-      $cost_candy = 50;
+    
+      $output = '<p>Please review your registration choices below and click the PayPal "Pay Now" button if it is correct. If you need to make changes, please "go back" and make the appropriate changes and re-submit the form.</p>';
+      $output = $output.$registration_summary;
+      $output = $output.'<form action="'.$paypal_form_action.'" method="post">';
+      $output = $output.'<input type="hidden" name="cmd" value="_s-xclick">';
+      $output = $output.'<input type="hidden" name="hosted_button_id" value="'.$hosted_button_id.'">';
+      $output = $output.'<table>';
+      $output = $output.'<tr><td>'.$hidden.'</td></tr><tr><td><select name="os0">';
+      $output = $output.$option;
+      $output = $output.'</select> </td></tr>';
+      $output = $output.'</table>';
+      $output = $output.'<input type="hidden" name="currency_code" value="USD">';
+      $output = $output.'<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">';
+      $output = $output.'<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">';
+      global $user;
+      $profile = user_load($user->uid);
+      $output = $output.'<input name="first_name" type="hidden" value="'.$profile->field_first_name['und'][0]['value'].'" />';
+      $output = $output.'<input name="last_name" type="hidden" value="'.$profile->field_last_name['und'][0]['value'].'" />';
+      $output = $output.'<input name="address1" type="hidden" value="'.$profile->field_address_1['und'][0]['value'].'" />';
+      if (is_object($profile->field_address_2)) {
+        $output = $output.'<input name="address2" type="hidden" value="'.$profile->field_address_2['und'][0]['value'].'" />';
+      }
+      $output = $output.'<input name="city" type="hidden" value="'.$profile->field_address_city['und'][0]['value'].'" />';
+      $output = $output.'<input name="state" type="hidden" value="'.$profile->field_address_state['und'][0]['value'].'" />';
+      $output = $output.'<input name="zip" type="hidden" value="'.$profile->field_address_zip['und'][0]['value'].'" />';
+      $output = $output.'<input name="email" type="hidden" value="'.$user->mail.'" />';
+      $output = $output.'<input name="custom" type="hidden" value="'.$user->uid.'" />';
+      $output = $output.'<input name="invoice" type="hidden" value="'.$nwll_invoice_season.'-C'.$children.'-'.$inv_append.'-'.$user->uid.'" />';
+      $output = $output.'</form>';
     }
+    return $output;
+  }elseif ($form_id == 'webform_client_form_6577') {
+    $output = '[integrate with commerce cart here]';
+    return $output;
   }
-} elseif ($children == 2) {
-  $children_label = 'Children';
-  $children_fee = '$260.00 - ';
-  $cost_children = 260;
-  if (!$sandbox) { //PRODUCTION
-    $hosted_button_id = 'ZFD59U5QXXGGG';
-  } else { //TEST SANDBOX
-    $hosted_button_id = 'Z5Q93R7D4ZG54';
-  }
-  $hidden = '<input type="hidden" name="on0" value="2 Children Registration">';
-  if ($volunteer == '$75 - Refundable Deposit') {
-    $cost_volunteer = 75;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $370.00 USD</option>';
-      $inv_append = 'VD-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $385.00 USD</option>';
-      $inv_append = 'VD-CS';
-      $cost_candy = 50;
-    }
-  } else { //$150 Volunteer Buyout
-    $cost_volunteer = 150;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $445.00 USD</option>';
-      $inv_append = 'VB-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $460.00 USD</option>';
-      $inv_append = 'VB-CS';
-      $cost_candy = 50;
-    }
-  }
-} elseif ($children == 3) {
-  $children_label = 'Children';
-  $children_fee = '$360.00 - ';
-  $cost_children = 360;
-  if (!$sandbox) { //PRODUCTION
-    $hosted_button_id = 'HCGC8LCK3GST8';
-  } else { //TEST SANDBOX
-    $hosted_button_id = 'X85CAMULYEQML';
-  }
-  $hidden = '<input type="hidden" name="on0" value="3 Children Registration">';
-  if ($volunteer == '$75 - Refundable Deposit') {
-    $cost_volunteer = 75;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $470.00 USD</option>';
-      $inv_append = 'VD-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $485.00 USD</option>';
-      $inv_append = 'VD-CS';
-      $cost_candy = 50;
-    }
-  } else { //$150 Volunteer Buyout
-    $cost_volunteer = 150;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $545.00 USD</option>';
-      $inv_append = 'VB-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $560.00 USD</option>';
-      $inv_append = 'VB-CS';
-      $cost_candy = 50;
-    }
-  }
-} elseif ($children == 4) {
-  $children_label = 'Children';
-  $children_fee = '$440.00 - ';
-  $cost_children = 440;
-  if (!$sandbox) { //PRODUCTION
-    $hosted_button_id = 'NTYZDGDZZ2CZA';
-  } else { //TEST SANDBOX
-    $hosted_button_id = 'X6ZN7ZUVWBJV4';
-  }
-  $hidden = '<input type="hidden" name="on0" value="4 Children Registration">';
-  if ($volunteer == '$75 - Refundable Deposit') {
-    $cost_volunteer = 75;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $550.00 USD</option>';
-      $inv_append = 'VD-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $565.00 USD</option>';
-      $inv_append = 'VD-CS';
-      $cost_candy = 50;
-    }
-  } else { //$150 Volunteer Buyout
-    $cost_volunteer = 150;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $625.00 USD</option>';
-      $inv_append = 'VB-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $640.00 USD</option>';
-      $inv_append = 'VB-CS';
-      $cost_candy = 50;
-    }
-  }
-} elseif ($children == 5) {
-  $children_label = 'Children';
-  $children_fee = '$500.00 - ';
-  $cost_children = 500;
-  if (!$sandbox) { //PRODUCTION
-    $hosted_button_id = 'QLHQPW6ZZML5W';
-  } else { //TEST SANDBOX
-    $hosted_button_id = 'AZHKPYGCKKL2Y';
-  }
-  $hidden = '<input type="hidden" name="on0" value="5 Children Registration">';
-  if ($volunteer == '$75 - Refundable Deposit') {
-    $cost_volunteer = 75;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Deposit - Candy Buyout">Volunteer Deposit - Candy Buyout $610.00 USD</option>';
-      $inv_append = 'VD-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Deposit - Candy Sell">Volunteer Deposit - Candy Sell $625.00 USD</option>';
-      $inv_append = 'VD-CS';
-      $cost_candy = 50;
-    }
-  } else { //$150 Volunteer Buyout
-    $cost_volunteer = 150;
-    if ($candy == '$35 - Candy Buyout') {
-      $option = '<option value="Volunteer Buyout - Candy Buyout">Volunteer Buyout - Candy Buyout $685.00 USD</option>';
-      $inv_append = 'VB-CB';
-      $cost_candy = 35;
-    } else {
-      $option = '<option value="Volunteer Buyout - Candy Sell">Volunteer Buyout - Candy Sell $700.00 USD</option>';
-      $inv_append = 'VB-CS';
-      $cost_candy = 50;
-    }
-  }
-}
-$volunteer_print = str_replace('$', '$', $volunteer);
-$volunteer_print = str_replace(' - ', '.00 - ', $volunteer_print);
-$candy_print = str_replace('$', '$ ', $candy);
-$candy_print = str_replace(' - ', '.00 - ', $candy_print);
-$registration_summary = '&nbsp;&nbsp;'.$children_fee.$children.' '.$children_label.'<br/>&nbsp;&nbsp;'.$volunteer_print.'<br/>&nbsp;&nbsp;'.$candy_print.'<br/>';
-$cost_total = $cost_children + $cost_candy + $cost_volunteer;
-//print $registration_summary;
-
-if($payment == 'C') {
-
-  global $user;
-  $node = new stdClass(); // Create a new node object
-  $node->type = "payment"; // Or page, or whatever content type you like
-  node_object_prepare($node); // Set some default values
-  // If you update an existing node instead of creating a new one,
-  // comment out the three lines above and uncomment the following:
-  // $node = node_load($nid); // ...where $nid is the node id
-  //$node->title    = "";
-  $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
-  $node->uid = $user->uid; // UID of the author of the node; or use $node->name
-  $node->field_payment_user_ref[$node->language][]['uid'] = $user->uid;
-  $node->field_year[$node->language][0]['value'] = $nwll_year.'-01-01 00:00:00'; //2013-00-00 00:00:00
-  $node->field_season[$node->language][0]['value'] = $nwll_invoice_season;
-  date_default_timezone_set('America/New_York');
-  $node->field_payment_date[$node->language][0]['value'] = date('Y-m-d H:i:s', REQUEST_TIME); //REQUEST_TIME
-  //drupal_set_message(date_default_timezone_get());
-  $node->field_payment_type[$node->language][0]['value'] = "Check";
-  $node->field_payment_amount[$node->language][0]['value'] = $cost_total;
-  $node->field_status[$node->language][0]['value'] = 'Pending';
-  $node->field_payment_invoice[$node->language][0]['value'] = $nwll_invoice_season.'-C'.$children.'-'.$inv_append;
-  $node->field_paypal_txn_id[$node->language][0]['value'] = NULL;
-  if($node = node_submit($node)) { // Prepare node for saving
-    node_save($node);
-  }
-
-  $output = '<p>Please review your registration choices below and if you need to make changes, please "go back" and make the appropriate changes and re-submit the form.</p>';
-  $output = $output.$registration_summary;
-  $output = $output.'<p>&nbsp;</p>';
-  $output = $output.'<div class="mail-check">';
-  $output = $output.'<p style="font-weight: bold;">&nbsp;&nbsp;Please mail your check payable to "NWLL" for the amount of $'.$cost_total.'.00 to:</p>';
-  $output = $output.'<p>&nbsp;&nbsp;&nbsp;&nbsp;North Wall Little League<br/>';
-  $output = $output.'&nbsp;&nbsp;&nbsp;&nbsp;P.O. Box 1242<br/>';
-  $output = $output.'&nbsp;&nbsp;&nbsp;&nbsp;Wall, NJ 07719-1242</p>';
-  $output = $output.'</div>';
-  $output = $output.'<p>&nbsp;</p>';
-
-} else {
-
-  $output = '<p>Please review your registration choices below and click the PayPal "Pay Now" button if it is correct. If you need to make changes, please "go back" and make the appropriate changes and re-submit the form.</p>';
-  $output = $output.$registration_summary;
-  $output = $output.'<form action="'.$paypal_form_action.'" method="post">';
-  $output = $output.'<input type="hidden" name="cmd" value="_s-xclick">';
-  $output = $output.'<input type="hidden" name="hosted_button_id" value="'.$hosted_button_id.'">';
-  $output = $output.'<table>';
-  $output = $output.'<tr><td>'.$hidden.'</td></tr><tr><td><select name="os0">';
-  $output = $output.$option;
-  $output = $output.'</select> </td></tr>';
-  $output = $output.'</table>';
-  $output = $output.'<input type="hidden" name="currency_code" value="USD">';
-  $output = $output.'<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">';
-  $output = $output.'<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">';
-  global $user;
-  $profile = user_load($user->uid);
-  $output = $output.'<input name="first_name" type="hidden" value="'.$profile->field_first_name['und'][0]['value'].'" />';
-  $output = $output.'<input name="last_name" type="hidden" value="'.$profile->field_last_name['und'][0]['value'].'" />';
-  $output = $output.'<input name="address1" type="hidden" value="'.$profile->field_address_1['und'][0]['value'].'" />';
-  if (is_object($profile->field_address_2)) {
-    $output = $output.'<input name="address2" type="hidden" value="'.$profile->field_address_2['und'][0]['value'].'" />';
-  }
-  $output = $output.'<input name="city" type="hidden" value="'.$profile->field_address_city['und'][0]['value'].'" />';
-  $output = $output.'<input name="state" type="hidden" value="'.$profile->field_address_state['und'][0]['value'].'" />';
-  $output = $output.'<input name="zip" type="hidden" value="'.$profile->field_address_zip['und'][0]['value'].'" />';
-  $output = $output.'<input name="email" type="hidden" value="'.$user->mail.'" />';
-  $output = $output.'<input name="custom" type="hidden" value="'.$user->uid.'" />';
-  $output = $output.'<input name="invoice" type="hidden" value="'.$nwll_invoice_season.'-C'.$children.'-'.$inv_append.'-'.$user->uid.'" />';
-  $output = $output.'</form>';
-}
-return $output;
 }
