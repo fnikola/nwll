@@ -392,60 +392,60 @@ function webform_submit_confirmation($submission) {
         switch ($age) {
           case ($age <= 5): //Rookie
             $product_id = 1;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 6: //T-Ball
             $product_id = 2;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 7: //Minors
           case 8:
             $product_id = 3;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 9: //AAA
           case 10:
             $product_id = 4;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 11: //Majors
           case 12:
             $product_id = 5;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case $age >= 13: //Juniors
             $product_id = 6;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
         }
       } else { // Softball
         switch ($age) {
           case ($age <= 5): //ROokie
             $product_id = 1;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 6: //T-Ball
             $product_id = 11;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 7: //Pioneer
           case 8:
             $product_id = 12;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 9: //Minors
           case 10:
             $product_id = 13;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case 11: //Majors
           case 12:
             $product_id = 14;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
             break;
           case $age >= 13: //Juniors
             $product_id = 15;
-            webform_submit_addtocart($product_id, $order, $user )
+            webform_submit_addtocart($product_id, $order, $user );
            break;
         }
       }
