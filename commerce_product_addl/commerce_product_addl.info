@@ -1,0 +1,6 @@
+name = Commerce Product Addl
+description = Helpful cart code snippets for commerce products
+core = 7.x
+package = Commerce
+
+version = "7.x-1.0"
