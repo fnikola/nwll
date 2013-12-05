@@ -361,9 +361,6 @@ function webform_submit_confirmation($submission) {
     $nwll_invoice_season = variable_get('nwll_invoice_season');
     $nwll_paypal_env = variable_get('nwll_paypal_env');
     
-    // TO DO Get the product IDs for each player registered (need to look up sport/age)
-    $product_id = 5;
-    
     // First, see if there is already a cart for this user. Here we will not assume that commerce_cart is enabled.
     if (module_exists('commerce_cart')) {
       $order = commerce_cart_order_load($user->uid);
@@ -379,14 +376,164 @@ function webform_submit_confirmation($submission) {
       commerce_cart_order_empty($order);
     }
 
-    // Load whatever product represents the item the customer will be paying for and create a line item for it.
-    $product = commerce_product_load($product_id);
-    $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
-    // Save the line item to get its ID.
-    commerce_line_item_save($line_item);
-    // Add the line item to the order using fago's rockin' wrapper.
-    $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
-    $order_wrapper->commerce_line_items[] = $line_item;
+    // TO DO Get the product IDs for each player registered (need to look up sport/age)
+    $display = 'page_13';
+    $view = views_get_view('players');
+    $view->set_display($display);
+    $view->execute();
+    $view_result = $view->result;
+    //drupal_set_message('<pre>'. check_plain(print_r($view_result, TRUE)) .'</pre>');
+    foreach($view_result as $item){
+      //drupal_set_message('<pre>'. check_plain($item->field_field_sport[0]['raw']['value']) .'</pre>');
+      //drupal_set_message('<pre>'. check_plain($item->field_field_league_age_computed[0]['raw']['value']) .'</pre>');
+      $sport = $item->field_field_sport[0]['raw']['value'];
+      $age = $item->field_field_league_age_computed[0]['raw']['value']
+      if ($sport == 'Baseball') { //Baseball
+        switch ($age) {
+          case ($age <= 5): //Rookie
+             $product_id = 1;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+           break;
+          case 6: //T-Ball
+            $product_id = 2;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case 7: //Minors
+          case 8:
+            $product_id = 3;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case 9: //AAA
+          case 10:
+            $product_id = 4;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case 11: //Majors
+          case 12:
+            $product_id = 5;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case $age >= 13: //Juniors
+            $product_id = 6;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+        }
+      } else { // Softball
+        switch ($age) {
+          case ($age <= 5): //ROokie
+            $product_id = 1;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case 6: //T-Ball
+            $product_id = 11;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case 7: //Pioneer
+          case 8:
+            $product_id = 12;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+            break;
+          case 9: //Minors
+          case 10:
+             $product_id = 13;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+           break;
+          case 11: //Majors
+          case 12:
+             $product_id = 14;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+           break;
+          case $age >= 13: //Juniors
+             $product_id = 15;
+            // Load whatever product represents the item the customer will be paying for and create a line item for it.
+            $product = commerce_product_load($product_id);
+            $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
+            // Save the line item to get its ID.
+            commerce_line_item_save($line_item);
+            // Add the line item to the order using fago's rockin' wrapper.
+            $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+            $order_wrapper->commerce_line_items[] = $line_item;
+           break;
+        }
+      }
+    }
 
     // Load volunteer
     $product = commerce_product_load($volunteer == '$75 - Refundable Deposit' ? 8 : 7);
