@@ -1,3 +1,4 @@
+<?php
 /**
  *
  * function to check if a product exist in cart or not
