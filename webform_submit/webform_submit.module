@@ -387,7 +387,7 @@ function webform_submit_confirmation($submission) {
       //drupal_set_message('<pre>'. check_plain($item->field_field_sport[0]['raw']['value']) .'</pre>');
       //drupal_set_message('<pre>'. check_plain($item->field_field_league_age_computed[0]['raw']['value']) .'</pre>');
       $sport = $item->field_field_sport[0]['raw']['value'];
-      $age = $item->field_field_league_age_computed[0]['raw']['value']
+      $age = $item->field_field_league_age_computed[0]['raw']['value'];
       if ($sport == 'Baseball') { //Baseball
         switch ($age) {
           case ($age <= 5): //Rookie
