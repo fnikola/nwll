@@ -9,7 +9,7 @@
  *  returns -2 if cart if empty
  *  returns line item ids for the searched product(array of line item ids incase of multiple search of products else single line item id)
  */
-function product_in_cart($product_id) {
+function commerce_product_addl_in_cart($product_id) {
   if (!is_array($product_id)) {
     global $user;
     $current_order = commerce_cart_order_load($user->uid);
@@ -63,7 +63,7 @@ function product_in_cart($product_id) {
  *  given product does not exist
  *  current cart object is empty
  */
-function product_delete_cart($product_ids) {
+function commerce_product_addl_delete_cart($product_ids) {
   if (!is_array($product_ids)) {
     $line_item_id = product_in_cart($product_ids);
     if ($line_item_id != -1 && $line_item_id != -2) {
@@ -100,7 +100,7 @@ function product_delete_cart($product_ids) {
  * @return
  *   returns line item id for the product added to cart
  */
-function product_cart_add($product_id, $quantity, $uid = NULL) {
+function commerce_product_addl_cart_add($product_id, $quantity, $uid = NULL) {
   $line_item = NULL;
   if ($uid == NULL) {
     global $user;
@@ -125,7 +125,7 @@ function product_cart_add($product_id, $quantity, $uid = NULL) {
  *  returns -1 in case of failure.
  */
 
-function product_alter_quanity($product_id, $quantity, $param) {
+function commerce_product_addl_alter_quanity($product_id, $quantity, $param) {
   $line_item_id = product_in_cart($product_id);
   if ($line_item_id != -1 && $line_item_id != -2) {
     if ($param == 'remove') {
@@ -150,3 +150,4 @@ function product_alter_quanity($product_id, $quantity, $param) {
     return -1;
   }
 }
+
