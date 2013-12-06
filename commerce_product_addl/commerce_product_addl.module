@@ -66,7 +66,7 @@ function commerce_product_addl_in_cart($product_id) {
  */
 function commerce_product_addl_delete_cart($product_ids) {
   if (!is_array($product_ids)) {
-    $line_item_id = product_in_cart($product_ids);
+    $line_item_id = commerce_product_addl_in_cart($product_ids);
     if ($line_item_id != -1 && $line_item_id != -2) {
       global $user;
       $current_order = commerce_cart_order_load($user->uid);
@@ -75,7 +75,7 @@ function commerce_product_addl_delete_cart($product_ids) {
       return -1;
   }
   else {
-    $line_item_ids = product_in_cart($product_ids);
+    $line_item_ids = commerce_product_addl_in_cart($product_ids);
     if ($line_item_ids != -1 && $line_item_ids != -2) {
       global $user;
       $current_order = commerce_cart_order_load($user->uid);
@@ -126,13 +126,13 @@ function commerce_product_addl_cart_add($product_id, $quantity, $uid = NULL) {
  *  returns -1 in case of failure.
  */
 
-function commerce_product_addl_alter_quanity($product_id, $quantity, $param) {
-  $line_item_id = product_in_cart($product_id);
+function commerce_product_addl_alter_quantity($product_id, $quantity, $param) {
+  $line_item_id = commerce_product_addl_in_cart($product_id);
   if ($line_item_id != -1 && $line_item_id != -2) {
     if ($param == 'remove') {
       $product_quantity_in_cart = commerce_line_items_quantity(array($line_item_id));
       if ($quantity >= $product_quantity_in_cart) {
-        product_delete_cart($product_id);
+        commerce_product_addl_delete_cart($product_id);
       }
       else {
         $line_item = commerce_line_item_load($line_item_id);
