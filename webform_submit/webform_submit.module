@@ -486,10 +486,11 @@ function webform_submit_confirmation($submission) {
  */
 
 function webform_submit_addtocart($product_id, $order, $user = NULL) {
-
   if (commerce_product_addl_in_cart($product_id) > 0) {
-    commerce_product_addl_alter_quanity($product_id, 1, 'add');
+    commerce_product_addl_alter_quantity($product_id, 1, 'add');
+    //drupal_set_message('<pre>'. check_plain('product_id_: '.$product_id) .'</pre>');
   } else {
+    //drupal_set_message('<pre>'. check_plain('product_id: '.$product_id) .'</pre>');
     // Load whatever product represents the item the customer will be paying for and create a line item for it.
     $product = commerce_product_load($product_id);
     $line_item = commerce_product_line_item_new($product, 1, $order->order_id);
@@ -500,4 +501,5 @@ function webform_submit_addtocart($product_id, $order, $user = NULL) {
     $order_wrapper->commerce_line_items[] = $line_item;
   }
 }
+
 
