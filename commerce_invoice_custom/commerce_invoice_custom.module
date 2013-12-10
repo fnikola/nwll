@@ -1,0 +1,8 @@
+<?php
+function custom_commerce_invoice_number_callbacks() {
+  return array('custom_invoice_gen' => t('my custom invoice callback'));
+}
+function custom_invoice_gen($invoice = NULL) {
+  $order_id = $invoice->order_id;
+  return 'custom prefix' . $order_id;
+}
