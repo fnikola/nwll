@@ -1,5 +1,5 @@
 <?php
-function custom_commerce_invoice_number_callbacks() {
+function commerce_invoice_custom_commerce_invoice_number_callbacks() {
   return array('custom_invoice_gen' => t('my custom invoice callback'));
 }
 function custom_invoice_gen($invoice = NULL) {
