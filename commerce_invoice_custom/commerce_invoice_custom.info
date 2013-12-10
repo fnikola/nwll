@@ -1,0 +1,12 @@
+; $Id$
+name = Invoice Custom
+description = Generate a custom invoice number
+dependencies[] = commerce_invoice
+package = Commerce (contrib)
+core = 7.x
+
+; Information
+version = "7.x-1.0"
+core = "7.x"
+project = "commerce_invoice_custom"
+
