@@ -4,5 +4,6 @@ function commerce_invoice_custom_commerce_invoice_number_callbacks() {
 }
 function custom_invoice_gen($invoice = NULL) {
   $order_id = $invoice->order_id;
-  return 'custom prefix' . $order_id;
+  return 'custom-prefix-'.invoice_id.'-'.$order_id;
 }
+
