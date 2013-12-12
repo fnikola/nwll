@@ -1,0 +1,6 @@
+<?php
+
+function commerce_paypal_custom_commerce_paypal_wps_order_form_data_alter($data, $order) {
+  drupal_set_message('<pre>'. check_plain(print_r($view_result, TRUE)) .'</pre>');
+
+}
