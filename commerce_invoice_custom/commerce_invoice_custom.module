@@ -4,6 +4,50 @@ function commerce_invoice_custom_commerce_invoice_number_callbacks() {
 }
 function custom_invoice_gen($invoice = NULL) {
   $order_id = $invoice->order_id;
-  return 'custom-prefix-'.invoice_id.'-'.$order_id;
+  //drupal_set_message('<pre>'. check_plain(print_r($invoice, TRUE)) .'</pre>');
+  drupal_set_message('<pre>'. check_plain('order_id: '.$order_id) .'</pre>');
+  flog_it($invoice, 'INVOICE: ');
+  //2013SB-C1-VD-CB-2071
+  $players = 0;
+  $custom_prefix_season = variable_get('nwll_invoice_season');
+  $order = commerce_order_load($order_id);
+  foreach (entity_metadata_wrapper('commerce_order', $order)->commerce_line_items as $delta => $line_item_wrapper) {
+    if (in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
+      switch ($line_item_wrapper->commerce_product->raw()) {
+        case 1: //Player Registration
+        case 2: //Player Registration
+        case 3: //Player Registration
+        case 4: //Player Registration
+        case 5: //Player Registration
+        case 6: //Player Registration
+        case 11: //Player Registration
+        case 12: //Player Registration
+        case 13: //Player Registration
+        case 14: //Player Registration
+        case 15: //Player Registration
+          $players++;
+          break;
+        case 7: //Volunteer Buyout
+          $custom_prefix_volunteer = 'VB';
+          break;
+        case 8: //Volunteer Refundable Deposit
+          $custom_prefix_volunteer = 'VD';
+          break;
+        case 9: //Candy Buyout
+          $custom_prefix_candy = 'CB';
+          break;
+        case 10: //Candy Sell
+          $custom_prefix_candy = 'CS';
+          break;
+      }
+    }
+  }
+  $custom_prefix_players = 'C'.$players;
+  $custom_prefix = $custom_prefix_season.'-'.$custom_prefix_players.'-'.$custom_prefix_volunteer.'-'.$custom_prefix_candy.'-'.$invoice->uid.'-'.$order_id;
+  return $custom_prefix;
+/*
+  return 'custom prefix '.$order_id;
+*/
 }
+
 
