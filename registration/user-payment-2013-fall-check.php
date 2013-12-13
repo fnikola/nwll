@@ -1,5 +1,5 @@
 /*
-* PHP code for the body of web form node 6218 (user/payment/2013/fall/check)
+* PHP code for the body of PayPal page node 6218 (user/payment/2013/fall/check)
 *
 */
 <?php
