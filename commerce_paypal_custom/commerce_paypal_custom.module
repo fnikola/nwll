@@ -1,6 +1,30 @@
 <?php
-
-function commerce_paypal_custom_commerce_paypal_wps_order_form_data_alter($data, $order) {
-  drupal_set_message('<pre>'. check_plain(print_r($view_result, TRUE)) .'</pre>');
+/* 
+* Use hook in commerce_paypal_wps to override $data sent to PayPal 
+* Add default Billing Information for PayPal payment page (not using PayPal account)
+*/
+function commerce_paypal_custom_commerce_paypal_wps_order_form_data_alter(&$data, $order) {
+  //Generate temp invoice with order_id for custom invoice generation function
+  $invoice = commerce_invoice_new($order->uid, $order->order_id);
+  //drupal_set_message('<pre>'. check_plain('=$order: '.print_r($order, TRUE)) .'</pre>');
+  //drupal_set_message('<pre>'. check_plain('=$data: '.print_r($data, TRUE)) .'</pre>');
+  //drupal_set_message('<pre>'. check_plain('=$invoice: '.print_r($invoice, TRUE)) .'</pre>');
+  $data->item_name_1 = variable_get('nwll_season').' '.variable_get('nwll_year').' Registration';
+  $invoice_num = custom_invoice_gen($invoice);
+  $data['invoice'] = $invoice_num;
+  $profile = user_load($order->uid);
+  drupal_set_message('<pre>'. check_plain('=$profile: '.print_r($profile, TRUE)) .'</pre>');
+  $data['first_name'] = $profile->field_first_name['und'][0]['value'];
+  $data['last_name'] = $profile->field_last_name['und'][0]['value'];
+  $data['address1'] = $profile->field_address_1['und'][0]['value'];
+  if (is_object($profile->field_address_2)) {
+    $data['address2'] = $profile->field_address_2['und'][0]['value'];
+  }
+  $data['city'] = $profile->field_address_city['und'][0]['value'];
+  $data['state'] = $profile->field_address_state['und'][0]['value'];
+  $data['zip'] = $profile->field_address_zip['und'][0]['value'];
+  $data['email'] = $profile->mail;
+  $data['custom'] = $order->uid;
+  drupal_set_message('<pre>'. check_plain('=$data2: '.print_r($data, TRUE)) .'</pre>');
 
 }
