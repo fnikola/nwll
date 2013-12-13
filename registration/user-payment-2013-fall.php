@@ -1,5 +1,5 @@
 /*
-* PHP code for the body of web form node 6165 (user/payment/2013/fall)
+* PHP code for the body of PayPal page node 6165 (user/payment/2013/fall)
 *
 */
 <!--<p><b>Today's date:</b> <? print(Date("l F d, Y")); ?></p>-->
