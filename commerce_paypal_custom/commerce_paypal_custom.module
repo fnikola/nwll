@@ -13,7 +13,7 @@ function commerce_paypal_custom_commerce_paypal_wps_order_form_data_alter(&$data
   $invoice_num = custom_invoice_gen($invoice);
   $data['invoice'] = $invoice_num;
   $profile = user_load($order->uid);
-  drupal_set_message('<pre>'. check_plain('=$profile: '.print_r($profile, TRUE)) .'</pre>');
+  //drupal_set_message('<pre>'. check_plain('=$profile: '.print_r($profile, TRUE)) .'</pre>');
   $data['first_name'] = $profile->field_first_name['und'][0]['value'];
   $data['last_name'] = $profile->field_last_name['und'][0]['value'];
   $data['address1'] = $profile->field_address_1['und'][0]['value'];
@@ -25,6 +25,5 @@ function commerce_paypal_custom_commerce_paypal_wps_order_form_data_alter(&$data
   $data['zip'] = $profile->field_address_zip['und'][0]['value'];
   $data['email'] = $profile->mail;
   $data['custom'] = $order->uid;
-  drupal_set_message('<pre>'. check_plain('=$data2: '.print_r($data, TRUE)) .'</pre>');
-
+  //drupal_set_message('<pre>'. check_plain('=$data2: '.print_r($data, TRUE)) .'</pre>');
 }
