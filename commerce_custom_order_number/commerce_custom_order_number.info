@@ -1,0 +1,11 @@
+; $Id$
+name = Custom Order Number
+description = Generates a custom order number (overrides default sequential order number generation)
+dependencies[] = commerce
+package = Commerce (contrib)
+core = 7.x
+
+; Information
+version = "7.x-1.0"
+core = "7.x"
+project = "commerce_custom_order_number"
