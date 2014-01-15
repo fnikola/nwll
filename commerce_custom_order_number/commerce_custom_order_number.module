@@ -8,7 +8,8 @@ function commerce_custom_order_number_commerce_order_presave($order) {
     if (isset($order->order_id)) {
       $custom_prefix_season = variable_get('nwll_invoice_season');
       $custom_date_time = date("YmdHis");
-      $order->order_number = $custom_prefix_season.'-'.$custom_date_time.'-'.$order->uid.'-'.$order->order_id;
+      $order->order_number = $custom_date_time.'-'.$custom_prefix_season.''.$order->uid.'-'.$order->order_id;
     }
   }
 }
+
